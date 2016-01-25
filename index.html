@@ -1,0 +1,273 @@
+<html>
+<head>
+	<title>Sort test</title>
+	<script type="text/javascript" src="../js/sorting.js"></script>
+<style type="text/css">
+
+table td{
+	background-color: lightgrey;
+}
+table,th,td {
+	border: 1px solid black;
+	padding: 5px;
+	border-collapse:collapse;
+	text-align: justify;
+}
+table th:hover{
+	cursor: pointer;
+}
+
+#thead th{
+	background-color: grey;
+	color: white;
+	text-align: center;
+}
+
+.asc div{
+	color: blue;
+	text-align: center;
+}
+.dsc div{
+	color: blue;
+	text-align: center;
+}
+.tspan{
+	margin-left: 5px;	
+}
+
+.search{
+	height:25px;
+	border:2px solid blue;
+	border-radius:3px
+}
+</style>
+
+</head>
+<body>
+
+<div>
+	<br><br>
+	<input type="text" id="search" placeholder="Search" onkeyup="search(this.value)"><br><br>
+	<input id="chkname" type="checkbox" onchange="checkChkboxes()" checked/><span class="tspan">Search by Name</span><br>
+	<input id="chkocc" type="checkbox" onchange="checkChkboxes()" checked/><span class="tspan">Search by Occupation</span><br>
+	<input id="chksal" type="checkbox" onchange="checkChkboxes()" checked/><span class="tspan">Search by Salary</span><br>
+	<br>
+<table>
+	<thead id="thead">
+		<tr>
+			<th>Name<div id="thname"></div></th>
+			<th>Occupation<div id="thoccupation"></div></th>
+			<th>Salary<div id="thsalary"></div></th>
+		</tr>
+	</thead>
+	<tbody id="tbody">
+
+	</tbody>
+	<tfoot>
+
+	</tfoot>
+</table>
+</div>
+
+<div id="searchdata"></div>
+
+<script type="text/javascript">
+
+
+//In real time you will get data from different sources i.e database or some web service etc.
+var tabledata = [
+					{Name:"John",Occupation:"Software Developer",Salary:50000},
+					{Name:"Brenda",Occupation:"Project Manager ",Salary:120000},
+					{Name:"Charles",Occupation:"Programmer",Salary:55000},
+					{Name:"Joe",Occupation:"Web developer",Salary:70000},
+					{Name:"David",Occupation:"Teacher",Salary:30000},
+					{Name:"Sudheer",Occupation:"Programmer",Salary:50000},
+					{Name:"Rajendar",Occupation:"Software Developer",Salary:60000},
+					{Name:"Anirudh",Occupation:"Software developer",Salary:45000},
+					{Name:"Manikaran",Occupation:"Associate Developer",Salary:35000}
+				];
+
+//Insert all the data into table 
+var tbody = document.getElementById("tbody");
+addElements(tabledata);
+
+var checkboxes = {
+					Name:null,
+					Occupation:null,
+					Salary:null	
+				 };
+
+var ths = document.getElementsByTagName("TH");
+for(var i=0;i<ths.length;i++){
+	ths[i].addEventListener("click",function(){
+
+		var sortfield = this.childNodes[0].nodeValue;
+		var asc_or_dsc = this.getAttribute('class');
+
+
+		var arrow_elem = document.getElementById('th'+sortfield.toLowerCase());
+
+		document.getElementById("tbody").innerHTML = '';
+
+		if(asc_or_dsc === 'dsc'){
+			var ascdata = sorting('dsc',sortfield,tabledata);
+			arrow_elem.innerHTML = '&#9660;';
+			addElements(ascdata);
+			asc_dsc_arrow_remove(sortfield);
+		}else{
+			var dscdata = sorting('asc',sortfield,tabledata);
+			arrow_elem.innerHTML = '&#9650;';
+			addElements(dscdata);
+			asc_dsc_arrow_remove(sortfield);
+		}
+		this.setAttribute("class",this.getAttribute('class') == 'dsc' ? 'asc' : 'dsc');
+	});
+}
+
+function asc_dsc_arrow_remove(sortfield){
+	if(sortfield == 'Name'){
+		document.getElementById('thoccupation').innerHTML = '';
+		document.getElementById('thsalary').innerHTML = '';
+	}else if(sortfield == 'Occupation'){
+		document.getElementById('thsalary').innerHTML = '';
+		document.getElementById('thname').innerHTML = '';
+	}else{
+		document.getElementById('thoccupation').innerHTML = '';
+		document.getElementById('thname').innerHTML = '';
+	}
+}
+
+
+function search(srchdata){
+
+	checkboxes.Name = document.getElementById('chkname').checked;
+	checkboxes.Occupation = document.getElementById('chkocc').checked;
+	checkboxes.Salary = document.getElementById('chksal').checked;
+
+	var data;
+	if(typeof srchdata != "number"){
+		data = srchdata.toLowerCase();
+	}
+
+	//removing all the data from table and then add them based on the search key word match
+	document.getElementById("tbody").innerHTML = '';
+	//we will copy the matched rows into the below object 
+	var obj = [];
+	var Name;
+	var Occupation;
+	var Salary;
+	var datalength = data.length;
+	var chknamelength = 0;
+	var chkocclength = 0;
+	var chksallength = 0;
+
+	//Main loop starts
+	for(var i=0;i<tabledata.length;i++){
+		var found = false;
+
+		//individual loops starts
+		//Name check
+
+		if(checkboxes.Name !== true && checkboxes.Occupation !== true && checkboxes.Salary !== true ){
+			found = true;
+		}
+
+		if(checkboxes.Name === true){
+			Name = tabledata[i].Name.toLowerCase();
+			chknamelength =  Name.length-datalength;
+			for(var j=0;j<=chknamelength;j++){
+				if(data === Name.substr(j, datalength)){
+					found = true;
+					break;
+				}
+			}
+		}	
+
+		//Occupation check
+		//If already found as part of name check this row will be in search result so no need to check 
+		//for further fields
+		if(checkboxes.Occupation === true){
+			if(!found){
+				Occupation = tabledata[i].Occupation.toLowerCase();
+				chkocclength =  Occupation.length-datalength;
+				for(var j=0;j<=chkocclength;j++){
+					if(data === Occupation.substr(j, datalength)){
+						found = true;
+						break;
+					}
+				}
+			}
+		}		
+		//Salary check
+		//If already found as part of name or occupation check this row will be in search result so no need //to check for further fields
+		console.log("chksal : "+checkboxes.Salary);
+		if(checkboxes.Salary === true){
+			if(!found){
+				Salary = tabledata[i].Salary.toString();
+				chksallength =  Salary.length-datalength;
+				for(var j=0;j<=chksallength;j++){
+					if(data === Salary.substr(j, datalength)){
+						found = true;
+						break;
+					}
+				}
+			}
+		}	
+		//Copy rows to new object if a match is found
+
+		if(found){
+			obj.push(tabledata[i]);
+		}
+
+	}//Main for loop end
+
+	console.log(obj);
+	//Insert the matched rows into table
+	addElements(obj);
+
+}//Function end
+
+
+//Below function adds the elements to the table 
+function addElements(tabledata){
+
+	for(var i=0;i<tabledata.length;i++){
+
+		var tr = document.createElement("TR");
+
+		var td1 = document.createElement("TD");
+		var td1txt = document.createTextNode(tabledata[i].Name);
+		td1.appendChild(td1txt);
+		tr.appendChild(td1);
+
+		var td2 = document.createElement("TD");
+		var td2txt = document.createTextNode(tabledata[i].Occupation);
+		td2.appendChild(td2txt);
+		tr.appendChild(td2);
+
+		var td3 = document.createElement("TD");
+		var td3txt = document.createTextNode(tabledata[i].Salary);
+		td3.appendChild(td3txt);
+		tr.appendChild(td3);
+
+		tbody.appendChild(tr);	
+	}
+
+}//addElements function end
+
+
+checkChkboxes = function(){
+
+	checkboxes.Name = document.getElementById('chkname').checked;
+	checkboxes.Occupation = document.getElementById('chkocc').checked;
+	checkboxes.Salary = document.getElementById('chksal').checked;
+
+		if(checkboxes.Name === true || checkboxes.Occupation === true || checkboxes.Salary === true ){
+			document.getElementById('search').removeAttribute('disabled');
+		}else{
+			document.getElementById('search').setAttribute('disabled',true);
+		}
+}
+</script>
+</body>
+</html>
