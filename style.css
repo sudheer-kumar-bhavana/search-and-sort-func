@@ -1,0 +1,44 @@
+<style>
+table td {
+            background-color: lightgrey;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            padding: 5px;
+            border-collapse: collapse;
+            text-align: justify;
+        }
+
+        table th:hover {
+            cursor: pointer;
+        }
+
+        #thead th {
+            background-color: grey;
+            color: white;
+            text-align: center;
+        }
+
+        .asc div {
+            color: blue;
+            text-align: center;
+        }
+
+        .dsc div {
+            color: blue;
+            text-align: center;
+        }
+
+        .tspan {
+            margin-left: 5px;
+        }
+
+        .search {
+            height: 25px;
+            border: 2px solid blue;
+            border-radius: 3px
+        }
+</style>
