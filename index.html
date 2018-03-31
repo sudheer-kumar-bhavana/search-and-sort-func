@@ -32,7 +32,7 @@ table th:hover{
 	text-align: center;
 }
 .tspan{
-	margin-left: 5px;	
+	margin-left: 5px;
 }
 
 .search{
@@ -47,6 +47,7 @@ table th:hover{
 
 <div>
 	<br><br>
+	<p>Dummy tag</p><br>
 	<input type="text" id="search" placeholder="Search" onkeyup="search(this.value)"><br><br>
 	<input id="chkname" type="checkbox" onchange="checkChkboxes()" checked/><span class="tspan">Search by Name</span><br>
 	<input id="chkocc" type="checkbox" onchange="checkChkboxes()" checked/><span class="tspan">Search by Occupation</span><br>
@@ -87,14 +88,14 @@ var tabledata = [
 					{Name:"Manikaran",Occupation:"Associate Developer",Salary:35000}
 				];
 
-//Insert all the data into table 
+//Insert all the data into table
 var tbody = document.getElementById("tbody");
 addElements(tabledata);
 
 var checkboxes = {
 					Name:null,
 					Occupation:null,
-					Salary:null	
+					Salary:null
 				 };
 
 var ths = document.getElementsByTagName("TH");
@@ -151,7 +152,7 @@ function search(srchdata){
 
 	//removing all the data from table and then add them based on the search key word match
 	document.getElementById("tbody").innerHTML = '';
-	//we will copy the matched rows into the below object 
+	//we will copy the matched rows into the below object
 	var obj = [];
 	var Name;
 	var Occupation;
@@ -181,10 +182,10 @@ function search(srchdata){
 					break;
 				}
 			}
-		}	
+		}
 
 		//Occupation check
-		//If already found as part of name check this row will be in search result so no need to check 
+		//If already found as part of name check this row will be in search result so no need to check
 		//for further fields
 		if(checkboxes.Occupation === true){
 			if(!found){
@@ -197,7 +198,7 @@ function search(srchdata){
 					}
 				}
 			}
-		}		
+		}
 		//Salary check
 		//If already found as part of name or occupation check this row will be in search result so no need //to check for further fields
 		console.log("chksal : "+checkboxes.Salary);
@@ -212,7 +213,7 @@ function search(srchdata){
 					}
 				}
 			}
-		}	
+		}
 		//Copy rows to new object if a match is found
 
 		if(found){
@@ -228,7 +229,7 @@ function search(srchdata){
 }//Function end
 
 
-//Below function adds the elements to the table 
+//Below function adds the elements to the table
 function addElements(tabledata){
 
 	for(var i=0;i<tabledata.length;i++){
@@ -250,7 +251,7 @@ function addElements(tabledata){
 		td3.appendChild(td3txt);
 		tr.appendChild(td3);
 
-		tbody.appendChild(tr);	
+		tbody.appendChild(tr);
 	}
 
 }//addElements function end
